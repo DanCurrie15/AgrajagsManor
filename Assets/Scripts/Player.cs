@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         controller = gameObject.GetComponent<CharacterController>();
+        UIManager.Instance.SetPlayerMaxHealth(playerHealth);
     }
 
     void Update()
@@ -43,13 +44,14 @@ public class Player : MonoBehaviour
             {
                 shovel.transform.RotateAround(shovelPivot.position, Vector3.up, -90);
             }
-            
+
         }
     }
 
     private void LoseHealth()
     {
         playerHealth--;
+        UIManager.Instance.SetPlayerCurrentHealth(playerHealth);
         if (playerHealth < 1)
         {
             Debug.Log("Possess New Object");
