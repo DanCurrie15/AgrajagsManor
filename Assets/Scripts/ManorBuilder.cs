@@ -17,7 +17,15 @@ public enum WallType
     NDoor,
     EDoor,
     SDoor,
-    WDoor
+    WDoor,
+    NWindow,
+    EWindow,
+    SWindow,
+    WWindow,
+    NWindowSlide,
+    EWindowSlide,
+    SWindowSlide,
+    WWindowSlide
 }
 
 public class WallInfo
@@ -40,14 +48,18 @@ public class ManorBuilder : MonoBehaviour
     [SerializeField]
     private GameObject door;
     [SerializeField]
+    private GameObject window;
+    [SerializeField]
+    private GameObject windowSlide;
+    [SerializeField]
     private GameObject wallsParent;
 
     // This reads bottom to top (as in South appears first in the array)
     private WallType[,] walls = new WallType[,] {
-        { WallType.SW, WallType.S, WallType.S, WallType.S, WallType.SE },
+        { WallType.SW, WallType.S, WallType.SWindowSlide, WallType.S, WallType.SE },
+        { WallType.W, WallType.None, WallType.None, WallType.None, WallType.EWindow },
         { WallType.W, WallType.None, WallType.None, WallType.None, WallType.E },
-        { WallType.W, WallType.None, WallType.None, WallType.None, WallType.E },
-        { WallType.W, WallType.None, WallType.None, WallType.None, WallType.E },
+        { WallType.W, WallType.None, WallType.None, WallType.None, WallType.EWindow },
         { WallType.NW, WallType.N, WallType.NDoor, WallType.N, WallType.NE },
         { WallType.None, WallType.None, WallType.None, WallType.None, WallType.None }
     };
@@ -108,5 +120,15 @@ public class ManorBuilder : MonoBehaviour
         wallDefinitions[WallType.EDoor] = new WallInfo() { rotate = -90, wall = door };
         wallDefinitions[WallType.SDoor] = new WallInfo() { rotate = 0, wall = door };
         wallDefinitions[WallType.WDoor] = new WallInfo() { rotate = 90, wall = door };
+
+        wallDefinitions[WallType.NWindow] = new WallInfo() { rotate = 180, wall = window };
+        wallDefinitions[WallType.EWindow] = new WallInfo() { rotate = -90, wall = window };
+        wallDefinitions[WallType.SWindow] = new WallInfo() { rotate = 0, wall = window };
+        wallDefinitions[WallType.WWindow] = new WallInfo() { rotate = 90, wall = window };
+
+        wallDefinitions[WallType.NWindowSlide] = new WallInfo() { rotate = 180, wall = windowSlide };
+        wallDefinitions[WallType.EWindowSlide] = new WallInfo() { rotate = -90, wall = windowSlide };
+        wallDefinitions[WallType.SWindowSlide] = new WallInfo() { rotate = 0, wall = windowSlide };
+        wallDefinitions[WallType.WWindowSlide] = new WallInfo() { rotate = 90, wall = windowSlide };
     }
 }
