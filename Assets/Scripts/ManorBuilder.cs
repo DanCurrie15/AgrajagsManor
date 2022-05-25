@@ -20,6 +20,12 @@ public enum WallType
     WDoor
 }
 
+public class WallInfo
+{
+    public int rotate { get; set; }
+    public GameObject wall { get; set; }
+}
+
 public class ManorBuilder : MonoBehaviour
 {
     [SerializeField]
@@ -45,11 +51,16 @@ public class ManorBuilder : MonoBehaviour
         { WallType.NW, WallType.N, WallType.NDoor, WallType.N, WallType.NE },
         { WallType.None, WallType.None, WallType.None, WallType.None, WallType.None }
     };
+
+    Dictionary<WallType, WallInfo> wallDefinitions;
+
     void Awake()
     {
+        PopulateWallDefinitions();
+
         Vector3 offsetToCentre = new Vector3(walls.GetLength(1) / 2.0f, 0f, walls.GetLength(0) / 2.0f);
         Vector3 offsetToTile = new Vector3(0.5f, 0f, 0.5f);
-        Debug.Log(offsetToCentre);
+
         for (int x = 0; x < walls.GetLength(1); x++)
         {
             for (int y = 0; y < walls.GetLength(0); y++)
@@ -61,69 +72,8 @@ public class ManorBuilder : MonoBehaviour
                     floorParent.transform
                 );
 
-                // yes this is really smelly game-jam code!
-                GameObject wallToInstantiate = null;
-                int rotate = 0;
-                if (walls[y, x] == WallType.N)
-                {
-                    wallToInstantiate = wall;
-                    rotate = 180;
-                }
-                else if (walls[y, x] == WallType.E)
-                {
-                    wallToInstantiate = wall;
-                    rotate = -90;
-                }
-                else if (walls[y, x] == WallType.S)
-                {
-                    wallToInstantiate = wall;
-                    rotate = 0;
-                }
-                else if (walls[y, x] == WallType.W)
-                {
-                    wallToInstantiate = wall;
-                    rotate = 90;
-                }
-                else if (walls[y, x] == WallType.NDoor)
-                {
-                    wallToInstantiate = door;
-                    rotate = 180;
-                }
-                else if (walls[y, x] == WallType.EDoor)
-                {
-                    wallToInstantiate = door;
-                    rotate = -90;
-                }
-                else if (walls[y, x] == WallType.SDoor)
-                {
-                    wallToInstantiate = door;
-                    rotate = 0;
-                }
-                else if (walls[y, x] == WallType.WDoor)
-                {
-                    wallToInstantiate = door;
-                    rotate = 90;
-                }
-                else if (walls[y, x] == WallType.NE)
-                {
-                    wallToInstantiate = corner;
-                    rotate = -90;
-                }
-                else if (walls[y, x] == WallType.NW)
-                {
-                    wallToInstantiate = corner;
-                    rotate = 180;
-                }
-                else if (walls[y, x] == WallType.SW)
-                {
-                    wallToInstantiate = corner;
-                    rotate = 90;
-                }
-                else if (walls[y, x] == WallType.SE)
-                {
-                    wallToInstantiate = corner;
-                    rotate = 0;
-                }
+                GameObject wallToInstantiate = wallDefinitions[walls[y, x]].wall;
+                int rotate = wallDefinitions[walls[y, x]].rotate;
 
                 if (wallToInstantiate != null)
                 {
@@ -136,5 +86,27 @@ public class ManorBuilder : MonoBehaviour
                 }
             }
         }
+
+    }
+
+    void PopulateWallDefinitions()
+    {
+        wallDefinitions = new Dictionary<WallType, WallInfo>();
+        wallDefinitions[WallType.None] = new WallInfo() { rotate = 0, wall = null };
+
+        wallDefinitions[WallType.N] = new WallInfo() { rotate = 180, wall = wall };
+        wallDefinitions[WallType.E] = new WallInfo() { rotate = -90, wall = wall };
+        wallDefinitions[WallType.S] = new WallInfo() { rotate = 0, wall = wall };
+        wallDefinitions[WallType.W] = new WallInfo() { rotate = 90, wall = wall };
+
+        wallDefinitions[WallType.NW] = new WallInfo() { rotate = 180, wall = corner };
+        wallDefinitions[WallType.NE] = new WallInfo() { rotate = -90, wall = corner };
+        wallDefinitions[WallType.SE] = new WallInfo() { rotate = 0, wall = corner };
+        wallDefinitions[WallType.SW] = new WallInfo() { rotate = 90, wall = corner };
+
+        wallDefinitions[WallType.NDoor] = new WallInfo() { rotate = 180, wall = door };
+        wallDefinitions[WallType.EDoor] = new WallInfo() { rotate = -90, wall = door };
+        wallDefinitions[WallType.SDoor] = new WallInfo() { rotate = 0, wall = door };
+        wallDefinitions[WallType.WDoor] = new WallInfo() { rotate = 90, wall = door };
     }
 }
