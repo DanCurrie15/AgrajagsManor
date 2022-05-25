@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum PlayerType { Human, Bookcase, Lamp}
+
 public class Player : MonoBehaviour
 {
     private CharacterController controller;
@@ -14,6 +16,14 @@ public class Player : MonoBehaviour
     private Transform shovelPivot;
     [SerializeField]
     private GameObject shovel;
+    [SerializeField]
+    private GameObject projectile;
+    [SerializeField]
+    private Transform projectileFireLocaiton;
+    [SerializeField]
+    private GameObject deadPlayer;
+    [SerializeField]
+    private PlayerType playerType;
 
     void Start()
     {
@@ -36,15 +46,26 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (shovel.transform.eulerAngles.y < 45)
+            if (playerType == PlayerType.Human)
             {
-                shovel.transform.RotateAround(shovelPivot.position, Vector3.up, 90);
+                if (shovel.transform.eulerAngles.y < 45)
+                {
+                    shovel.transform.RotateAround(shovelPivot.position, Vector3.up, 90);
+                }
+                else
+                {
+                    shovel.transform.RotateAround(shovelPivot.position, Vector3.up, -90);
+                }
             }
-            else
+            else if (playerType == PlayerType.Bookcase)
             {
-                shovel.transform.RotateAround(shovelPivot.position, Vector3.up, -90);
+                GameObject bookProjectile = Instantiate(projectile, projectileFireLocaiton.position, Quaternion.identity);
             }
-
+            else if (playerType == PlayerType.Lamp)
+            {
+                GameObject lampProjectile = Instantiate(projectile, projectileFireLocaiton.position, Quaternion.identity);
+                lampProjectile.GetComponent<FollowingProjectile>().enemyToFollow = EnemyManager.Instance.GetClosestEnemy(this.gameObject.transform);
+            }
         }
     }
 
@@ -55,6 +76,7 @@ public class Player : MonoBehaviour
         if (playerHealth < 1)
         {
             Debug.Log("Possess New Object");
+            Instantiate(deadPlayer, this.transform.position, Quaternion.identity);
             PlayerManager.Instance.RemovePlayablePlayer(this.gameObject);
         }
     }
