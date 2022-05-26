@@ -107,6 +107,7 @@ GameObject:
   - component: {fileID: 6858569460735111556}
   - component: {fileID: 4269655735424212320}
   - component: {fileID: 7384374563540532999}
+  - component: {fileID: -3326508875753264855}
   m_Layer: 0
   m_Name: ProjectileElectric
   m_TagString: Weapon
@@ -172,3 +173,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyToFollow: {fileID: 0}
   moveSpeed: 5
+--- !u!114 &-3326508875753264855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2767111125808334983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: beadbf26818874b489d63bf337a7f597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifetime: 3

@@ -19,18 +19,21 @@ public class Enemy : MonoBehaviour
     {
         if (GameManager.Instance.GameOn)
         {
-            if (!player)
+            if (!player.activeInHierarchy)
             {
                 player = PlayerManager.Instance.GetClosestPlayer(this.gameObject.transform);
             }
             transform.position = Vector3.MoveTowards(transform.position, player.transform.position, speed);
+            transform.LookAt(player.transform, Vector3.up);
 
-            if (Vector3.Distance(player.transform.position, this.transform.position) > 2f)
+            if (Vector3.Distance(player.transform.position, this.transform.position) < 1.5f)
             {
+                //Debug.Log("attack player");
                 animator.SetBool("isAttacking", false);
             }
             else
             {
+                //Debug.Log("stop attacking");
                 animator.SetBool("isAttacking", true);
             }
         }        
@@ -41,7 +44,8 @@ public class Enemy : MonoBehaviour
         if (collision.gameObject.CompareTag("Weapon"))
         {
             EnemyManager.Instance.enemies.Remove(this.gameObject);
-            this.gameObject.SetActive(false);
+            //this.gameObject.SetActive(false);
+            Destroy(this.gameObject, 0.1f);
         }
     }
 }

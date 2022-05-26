@@ -13,19 +13,20 @@ public class ProjectileMover : MonoBehaviour {
 		rb.velocity = transform.forward * speed;
 	}
 
-	void Update () {
+	/*void Update () {
 		if (gameObject.activeInHierarchy == true) {
 			rb.velocity = transform.forward * speed;
 		} else {
 			rb.velocity = Vector3.zero;
 		}
-	}
+	}*/
 
 	private void OnCollisionEnter(Collision collision)
 	{
 		if (collision.gameObject.CompareTag("Enemy"))
 		{
-			this.gameObject.SetActive(false);
+			//this.gameObject.SetActive(false);
+			Destroy(this.gameObject, 0.1f);
 		}
 	}
 }

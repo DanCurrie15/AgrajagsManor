@@ -10,7 +10,11 @@ public class Player : MonoBehaviour
     private Vector3 playerVelocity;
     private float playerSpeed = 2.0f;
     private float gravityValue = -9.81f;
-    private int playerHealth = 5;
+    private int playerHealth = 10;
+    private int damageAmount = 0;
+    private float damageRate = 1.5f;
+    private float nextDamage = 0f;
+    private Animator animator;
 
     [SerializeField]
     private Transform shovelPivot;
@@ -29,6 +33,10 @@ public class Player : MonoBehaviour
     {
         controller = gameObject.GetComponent<CharacterController>();
         UIManager.Instance.SetPlayerMaxHealth(playerHealth);
+        if (playerType == PlayerType.Human)
+        {
+            animator = GetComponent<Animator>();
+        }
     }
 
     void Update()
@@ -48,34 +56,56 @@ public class Player : MonoBehaviour
         {
             if (playerType == PlayerType.Human)
             {
-                if (shovel.transform.eulerAngles.y < 45)
+                animator.SetTrigger("attack");
+                shovel.tag = "Weapon";
+                StartCoroutine(EndShovelAttack());
+                /*if (shovel.transform.eulerAngles.y < 45)
                 {
                     shovel.transform.RotateAround(shovelPivot.position, Vector3.up, 90);
                 }
                 else
                 {
                     shovel.transform.RotateAround(shovelPivot.position, Vector3.up, -90);
-                }
+                }*/
             }
             else if (playerType == PlayerType.Bookcase)
             {
-                GameObject bookProjectile = Instantiate(projectile, projectileFireLocaiton.position, Quaternion.identity);
+                GameObject bookProjectile = Instantiate(projectile, projectileFireLocaiton.position, projectileFireLocaiton.rotation);
             }
             else if (playerType == PlayerType.Lamp)
             {
-                GameObject lampProjectile = Instantiate(projectile, projectileFireLocaiton.position, Quaternion.identity);
+                GameObject lampProjectile = Instantiate(projectile, projectileFireLocaiton.position, projectileFireLocaiton.rotation);
                 lampProjectile.GetComponent<FollowingProjectile>().enemyToFollow = EnemyManager.Instance.GetClosestEnemy(this.gameObject.transform);
+            }
+        }
+
+        if (damageAmount > 0)
+        {
+            if (Time.time > nextDamage && GameManager.Instance.GameOn)
+            {
+                if (!EnemyManager.Instance.GetClosestEnemy(this.gameObject.transform)
+                    || Vector3.Distance(this.transform.position, EnemyManager.Instance.GetClosestEnemy(this.gameObject.transform).transform.position) > 1f)
+                {
+                    damageAmount = 0;
+                }
+                nextDamage = Time.time + damageRate;
+                LoseHealth();                
             }
         }
     }
 
+    IEnumerator EndShovelAttack()
+    {
+        yield return new WaitForSeconds(1.5f);
+        shovel.tag = "Untagged";
+    }
+
     private void LoseHealth()
     {
-        playerHealth--;
+        playerHealth -= damageAmount;
         UIManager.Instance.SetPlayerCurrentHealth(playerHealth);
         if (playerHealth < 1)
         {
-            Debug.Log("Possess New Object");
             Instantiate(deadPlayer, this.transform.position, Quaternion.identity);
             PlayerManager.Instance.RemovePlayablePlayer(this.gameObject);
         }
@@ -85,8 +115,21 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            Debug.Log("hit by enemy");
-            LoseHealth();
+            Debug.Log("damage player");
+            ++damageAmount;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Debug.Log("stop damage player");
+            --damageAmount;
+            if (damageAmount < 1)
+            {
+                damageAmount = 0;
+            }
         }
     }
 }
