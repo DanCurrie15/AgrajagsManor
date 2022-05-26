@@ -55,13 +55,40 @@ public class ManorBuilder : MonoBehaviour
     private GameObject wallsParent;
 
     // This reads bottom to top (as in South appears first in the array)
-    private WallType[,] walls = new WallType[,] {
+    private WallType[,] originalWalls = new WallType[,] {
         { WallType.SW, WallType.S, WallType.SWindowSlide, WallType.S, WallType.SE },
         { WallType.W, WallType.None, WallType.None, WallType.None, WallType.EWindow },
         { WallType.W, WallType.None, WallType.None, WallType.None, WallType.E },
         { WallType.W, WallType.None, WallType.None, WallType.None, WallType.EWindow },
         { WallType.NW, WallType.N, WallType.NDoor, WallType.N, WallType.NE },
         { WallType.None, WallType.None, WallType.None, WallType.None, WallType.None }
+    };
+
+    private WallType[,] walls = new WallType[,] {
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, WallType.SW, WallType.SWindow, WallType.SE, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, WallType.SW, WallType.SWindow, WallType.SE, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, WallType.SW, 0, 0, 0, WallType.SE, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, WallType.SW, 0, 0, 0, WallType.SE, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, WallType.WWindow, 0, 0, 0, WallType.EWindow, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, WallType.WWindow, 0, 0, 0, WallType.E, WallType.SW, WallType.SWindow, WallType.SDoor, WallType.SWindow, WallType.SE, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, WallType.W, 0, 0, 0, WallType.E, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, WallType.W, 0, 0, 0, WallType.EDoor, WallType.WDoor, 0, 0, 0, WallType.EWindow, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, WallType.W, 0, 0, 0, WallType.E, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, WallType.W, 0, 0, 0, WallType.E, WallType.NW, WallType.N, WallType.NDoor, WallType.N, WallType.NE, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, WallType.W, 0, 0, 0, WallType.E, WallType.SW, WallType.SDoor, WallType.SWindow, WallType.S, WallType.SWindow, WallType.SDoor, WallType.SDoor, WallType.SDoor, WallType.SWindow, WallType.S, WallType.SWindow, WallType.SDoor, WallType.SE, WallType.W, 0, 0, 0, WallType.E, WallType.SW, WallType.S, WallType.SDoor, WallType.S, WallType.S, WallType.SE, 0, 0, 0, 0},
+        {0, WallType.SW, WallType.SWindow, WallType.SWindow, WallType.SE, WallType.NW, WallType.N, WallType.NDoor, WallType.N, WallType.NE, WallType.W, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, WallType.E, WallType.NW, WallType.N, WallType.NDoor, WallType.N, WallType.NE, WallType.W, 0, 0, 0, 0, WallType.EWindowSlide, 0, 0, 0, 0},
+        {0, WallType.WWindow, 0, 0, WallType.E, WallType.SW, WallType.S, WallType.SDoor, WallType.S, WallType.SE, WallType.W, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, WallType.E, WallType.SW, WallType.S, WallType.SDoor, WallType.S, WallType.SE, WallType.NW, WallType.NDoor, WallType.N, WallType.N, WallType.N, WallType.NE, 0, 0, 0, 0},
+        {0, WallType.WDoor, 0, 0, WallType.EDoor, WallType.WDoor, 0, 0, 0, WallType.EDoor, WallType.WDoor, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, WallType.EDoor, WallType.WDoor, 0, 0, 0, WallType.EDoor, 0, 0, 0, 0, WallType.SW, WallType.S, WallType.S, WallType.SWindowSlide, WallType.SE, 0},
+        {0, WallType.WWindow, 0, 0, WallType.E, WallType.NW, WallType.N, WallType.NDoor, WallType.N, WallType.NE, WallType.W, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, WallType.E, WallType.NW, WallType.N, WallType.NDoor,WallType.N, WallType.NE, 0, 0, 0, 0, WallType.WDoor, 0, 0, 0, WallType.EDoor, 0},
+        {0, WallType.NW, WallType.NWindow, WallType.NWindow, WallType.NE, WallType.SW, WallType.S, WallType.SDoor, WallType.S, WallType.SE, WallType.NW, WallType.N, WallType.N, WallType.N, WallType.N, WallType.N, 0, WallType.N, WallType.N, WallType.N, WallType.N, WallType.N, WallType.NE, WallType.SW, WallType.S, WallType.SDoor, WallType.S, WallType.SE, WallType.SW, WallType.SDoor, WallType.SDoor, WallType.SE, WallType.W, 0, 0, 0, WallType.EWindowSlide, 0},
+        {0, 0, 0, 0, 0, WallType.W, 0, 0, 0, WallType.E, WallType.SW, WallType.SE, WallType.SW, WallType.S, WallType.SE, WallType.SW, 0, WallType.SE, 0, 0, 0, 0, 0, WallType.W, 0, 0, 0, WallType.E, WallType.NW, WallType.NDoor, WallType.NDoor, WallType.NE, WallType.W, 0, 0, 0, WallType.EWindowSlide, 0},
+        {0, 0, 0, 0, 0, WallType.W, 0, 0, 0, WallType.E, WallType.W, WallType.EDoor, WallType.WDoor, 0, WallType.EDoor, WallType.WDoor, 0, 0, WallType.S, WallType.S, WallType.SDoor, WallType.S, WallType.SE, WallType.W, 0, 0, 0, WallType.E, 0, 0, 0, 0, WallType.NW, WallType.NDoor, WallType.N, WallType.NWindowSlide, WallType.NE, 0},
+        {0, 0, 0, 0, 0, WallType.W, 0, 0, 0, WallType.E, WallType.NW, WallType.NE, WallType.NW, WallType.NWindowSlide, WallType.NE, WallType.NW, 0, WallType.NE, WallType.NW, WallType.NWindowSlide, WallType.NWindowSlide, WallType.NWindowSlide, WallType.NE, WallType.W, 0, 0, 0, WallType.E, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, WallType.WWindow, 0, 0, 0, WallType.EWindow, 0, 0, 0, 0, 0, WallType.WWindow, 0, WallType.EWindow, 0, 0, 0, 0, 0, WallType.WWindow, 0, 0, 0, WallType.EWindow, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, WallType.NW, 0, 0, 0, WallType.NE, 0, 0, 0, 0, 0, WallType.WWindow, 0, WallType.EWindow, 0, 0, 0, 0, 0, WallType.NW, 0, 0, 0, WallType.NE, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, WallType.NW, WallType.NWindow, WallType.NE, 0, 0, 0, 0, 0, 0, WallType.WWindow, 0, WallType.EWindow, 0, 0, 0, 0, 0, 0, WallType.NW, WallType.NWindow, WallType.NE, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, WallType.SW, WallType.S, 0, WallType.S, WallType.SE, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, WallType.WWindow, 0, 0, 0, WallType.EWindow, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, WallType.WWindow, 0, 0, 0, WallType.EWindow, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, WallType.WWindow, 0, 0, 0, WallType.EWindow, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, WallType.NW, WallType.NWindow, WallType.NWindow, WallType.NWindow, WallType.NE, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     };
 
     Dictionary<WallType, WallInfo> wallDefinitions;
@@ -72,6 +99,8 @@ public class ManorBuilder : MonoBehaviour
 
         Vector3 offsetToCentre = new Vector3(walls.GetLength(1) / 2.0f, 0f, walls.GetLength(0) / 2.0f);
         Vector3 offsetToTile = new Vector3(0.5f, 0f, 0.5f);
+
+        Debug.Log("Manor floor size: " + walls.GetLength(1) + "x" + walls.GetLength(0));
 
         for (int x = 0; x < walls.GetLength(1); x++)
         {
