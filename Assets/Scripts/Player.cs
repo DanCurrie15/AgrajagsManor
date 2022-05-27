@@ -37,6 +37,7 @@ public class Player : MonoBehaviour
         {
             animator = GetComponent<Animator>();
         }
+        GameManager.Instance.playerChar = this.gameObject;
     }
 
     void Update()

@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
     public bool GameOn { private set; get; }
+    public GameObject playerChar;
 
     // Start is called before the first frame update
     void Start()

@@ -127,7 +127,6 @@ public class ManorBuilder : MonoBehaviour
                 }
             }
         }
-
     }
 
     void PopulateWallDefinitions()
