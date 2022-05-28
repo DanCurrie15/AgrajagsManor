@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class UIManager : Singleton<UIManager>
 {
     public TextMeshProUGUI health;
+    public TextMeshProUGUI killsToNextPossession;
     public GameObject gameOverPanel;
 
     private int maxHealth;
@@ -38,5 +39,9 @@ public class UIManager : Singleton<UIManager>
     {
         Debug.Log("Retry");
         SceneManager.LoadScene("Game");
+    }
+
+    public void UpdateKills() {
+        killsToNextPossession.text = GameManager.Instance.KillsToNextPossession().ToString();
     }
 }
