@@ -5,10 +5,12 @@ using UnityEngine;
 public class PlayerManager : Singleton<PlayerManager>
 {
     private List<GameObject> playablePlayers = new List<GameObject>();
+    private List<GameObject> futurePlayablePlayers = new List<GameObject>();
 
     void Start()
     {
         playablePlayers.AddRange(GameObject.FindGameObjectsWithTag("Player"));
+        futurePlayablePlayers.AddRange(GameObject.FindGameObjectsWithTag("FuturePlayer"));
     }
 
     public void RemovePlayablePlayer(GameObject player)
@@ -30,15 +32,44 @@ public class PlayerManager : Singleton<PlayerManager>
         playablePlayers[0].GetComponent<Player>().enabled = true;
     }
 
+    // returns a bool indicating if there was anything available to possess.
+    public bool GainNewPossession() {
+        if (futurePlayablePlayers.Count < 1) {
+            Debug.Log("Nothing left to possess!");
+            return false;
+        }
+
+        GameObject newPossession = null;
+        GameObject player = GameManager.Instance.playerChar;
+        if (player == null) {
+            newPossession = futurePlayablePlayers[0];
+            futurePlayablePlayers.RemoveAt(0);
+        }
+        else
+        {
+            newPossession = GetClosestInList(player.transform, futurePlayablePlayers);
+            futurePlayablePlayers.Remove(newPossession);
+        }
+        playablePlayers.Add(newPossession);
+
+        Debug.Log("Possessed something new!");
+        return true;
+    }
+
     public GameObject GetClosestPlayer(Transform obj)
+    {
+        return GetClosestInList(obj, playablePlayers);
+    }
+
+    public GameObject GetClosestInList(Transform obj, List<GameObject> objList)
     {
         GameObject nearest = null;
         float smallestDistance = float.PositiveInfinity;
-        if (playablePlayers.Count < 1)
+        if (objList.Count < 1)
         {
             return null;
         }
-        foreach (GameObject player in playablePlayers)
+        foreach (GameObject player in objList)
         {
             if (Vector3.Distance(player.transform.position, obj.position) < smallestDistance)
             {

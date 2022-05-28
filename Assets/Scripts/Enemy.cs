@@ -46,6 +46,7 @@ public class Enemy : MonoBehaviour
             EnemyManager.Instance.enemies.Remove(this.gameObject);
             //this.gameObject.SetActive(false);
             Destroy(this.gameObject, 0.1f);
+            GameManager.Instance.AddToKillCount();
         }
     }
 }
