@@ -60,14 +60,6 @@ public class Player : MonoBehaviour
                 animator.SetTrigger("attack");
                 shovel.tag = "Weapon";
                 StartCoroutine(EndShovelAttack());
-                /*if (shovel.transform.eulerAngles.y < 45)
-                {
-                    shovel.transform.RotateAround(shovelPivot.position, Vector3.up, 90);
-                }
-                else
-                {
-                    shovel.transform.RotateAround(shovelPivot.position, Vector3.up, -90);
-                }*/
             }
             else if (playerType == PlayerType.Bookcase)
             {
