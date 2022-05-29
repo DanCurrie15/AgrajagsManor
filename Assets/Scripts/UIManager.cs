@@ -9,6 +9,7 @@ public class UIManager : Singleton<UIManager>
     public TextMeshProUGUI health;
     public TextMeshProUGUI killsToNextPossession;
     public GameObject gameOverPanel;
+    public GameObject startGamePanel;
 
     private int maxHealth;
     private int currentHealth;
@@ -35,10 +36,24 @@ public class UIManager : Singleton<UIManager>
         gameOverPanel.SetActive(true);
     }
 
+    public void HideStartGamePanel()
+    {
+        startGamePanel.SetActive(false);
+    }
+
+    public void StartGame()
+    {
+        GameManager.Instance.StartGame();
+    }
+
     public void ReloadScene()
     {
-        Debug.Log("Retry");
         SceneManager.LoadScene("Game");
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 
     public void UpdateKills() {

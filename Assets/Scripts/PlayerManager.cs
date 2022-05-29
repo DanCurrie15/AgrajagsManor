@@ -15,21 +15,29 @@ public class PlayerManager : Singleton<PlayerManager>
 
     public void RemovePlayablePlayer(GameObject player)
     {
-        playablePlayers.Remove(player);
-        if (playablePlayers.Count > 0)
+        if (playablePlayers.Contains(player))
         {
-            SelectNewPlayer();
+            playablePlayers.Remove(player);
+            if (playablePlayers.Count > 0)
+            {
+                SelectNewPlayer();
+            }
+            else
+            {
+                GameManager.Instance.GameOver();
+            }            
         }
-        else
+        else if (futurePlayablePlayers.Contains(player))
         {
-            GameManager.Instance.GameOver();
+            futurePlayablePlayers.Remove(player);
         }
         player.SetActive(false);
     }
 
     public void SelectNewPlayer()
     {
-        playablePlayers[0].GetComponent<Player>().enabled = true;
+        //playablePlayers[0].GetComponent<Player>().enabled = true;
+        GameManager.Instance.playerChar = playablePlayers[0];
     }
 
     // returns a bool indicating if there was anything available to possess.

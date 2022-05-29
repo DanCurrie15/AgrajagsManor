@@ -2,13 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using CodeMonkey.HealthSystemCM;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IGetHealthSystem
 {
     private GameObject player;
     private float speed = 0.01f;
     private Animator animator;
     private NavMeshAgent agent;
+    private float enemyHealth = 2;
+    private HealthSystem healthSystem;
+
+    private void Awake()
+    {
+        healthSystem = new HealthSystem(enemyHealth);
+        healthSystem.OnDead += HealthSystem_OnDead;
+    }
 
     void Start()
     {
@@ -47,10 +56,25 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Weapon"))
         {
-            EnemyManager.Instance.enemies.Remove(this.gameObject);
-            //this.gameObject.SetActive(false);
-            Destroy(this.gameObject, 0.1f);
-            GameManager.Instance.AddToKillCount();
+            Debug.Log("Hit");
+            healthSystem.Damage(1);
+            --enemyHealth;
+            if (enemyHealth < 1)
+            {
+                Destroy(this.gameObject, 0.1f);
+                GameManager.Instance.AddToKillCount();
+                EnemyManager.Instance.enemies.Remove(this.gameObject);
+            }            
         }
+    }
+
+    private void HealthSystem_OnDead(object sender, System.EventArgs e)
+    {
+        Destroy(gameObject);
+    }
+
+    public HealthSystem GetHealthSystem()
+    {
+        return healthSystem;
     }
 }

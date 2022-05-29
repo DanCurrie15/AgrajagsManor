@@ -23,9 +23,9 @@ public class FollowingProjectile : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (!collision.gameObject.CompareTag("FuturePlayer"))
         {
-			//this.gameObject.SetActive(false);
+			this.gameObject.SetActive(false);
 			Destroy(this.gameObject, 0.1f);
 		}
     }

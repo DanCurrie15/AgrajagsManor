@@ -11,7 +11,7 @@ public class EnemyManager : Singleton<EnemyManager>
     public List<GameObject> enemies = new List<GameObject>();
 
     private float spawnRate = 2f;
-    private float spawnRateChangeRate = 5f;
+    private float spawnRateChangeRate = 4f;
     private float numSpawnPointsChangeRate = 15f;
     private float nextSpawn = 0f;
     private float nextSpawnRateChangeRate;
@@ -31,7 +31,7 @@ public class EnemyManager : Singleton<EnemyManager>
             nextSpawn = Time.time + spawnRate;
             Instantiate(enemy, spawnPoints[Random.Range(0,spawnPointRange)].position, Quaternion.identity);
 
-            if (Time.time > nextSpawnRateChangeRate && spawnRate > 1f)
+            if (Time.time > nextSpawnRateChangeRate && spawnRate > 0.14f)
             {
                 nextSpawnRateChangeRate = Time.time + spawnRateChangeRate;
                 spawnRate -= 0.05f;

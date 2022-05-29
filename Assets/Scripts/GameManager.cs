@@ -10,16 +10,10 @@ public class GameManager : Singleton<GameManager>
     [SerializeField]
     private int newPossessionThreshold = 2;
 
-    // Start is called before the first frame update
-    void Start()
+    public void StartGame()
     {
+        UIManager.Instance.HideStartGamePanel();
         GameOn = true;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void GameOver()
