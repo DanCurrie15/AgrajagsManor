@@ -34,6 +34,14 @@ public class WallInfo
     public GameObject wall { get; set; }
 }
 
+[System.Serializable]
+public struct Furniture
+{
+    public GameObject prefab;
+    public Vector3 position;
+    public float rotation;  // around y
+}
+
 public class ManorBuilder : MonoBehaviour
 {
     [SerializeField]
@@ -53,6 +61,13 @@ public class ManorBuilder : MonoBehaviour
     private GameObject windowSlide;
     [SerializeField]
     private GameObject wallsParent;
+
+    [SerializeField]
+    private List<Furniture> furniture;
+    private List<GameObject> furnitureInstances;
+    [SerializeField]
+    private GameObject furnitureParent;
+    private bool initialFurniture = true;
 
     // This reads bottom to top (as in South appears first in the array)
     private WallType[,] originalWalls = new WallType[,] {
@@ -95,6 +110,7 @@ public class ManorBuilder : MonoBehaviour
 
     void Awake()
     {
+        furnitureInstances = new List<GameObject>();
         PopulateWallDefinitions();
 
         Vector3 offsetToCentre = new Vector3(walls.GetLength(1) / 2.0f, 0f, walls.GetLength(0) / 2.0f);
@@ -158,5 +174,45 @@ public class ManorBuilder : MonoBehaviour
         wallDefinitions[WallType.EWindowSlide] = new WallInfo() { rotate = -90, wall = windowSlide };
         wallDefinitions[WallType.SWindowSlide] = new WallInfo() { rotate = 0, wall = windowSlide };
         wallDefinitions[WallType.WWindowSlide] = new WallInfo() { rotate = 90, wall = windowSlide };
+    }
+
+    void FixedUpdate() {
+        // TODO: this would be better to compile out at build time.
+        // only create new instances when they change
+        if (
+            (GameManager.Instance.gameMode == GameMode.EditMode && furnitureInstances.Count != furniture.Count) ||
+            (GameManager.Instance.gameMode == GameMode.PlayMode && initialFurniture)
+        ) {
+            initialFurniture = false;
+            int currentInstances = furnitureInstances.Count;
+            for (int i = 0; i < currentInstances; i++)
+            {
+                GameObject item = furnitureInstances[0];
+                furnitureInstances.Remove(item);
+                Destroy(item);
+            }
+
+            foreach (Furniture item in furniture)
+            {
+                GameObject obj = Instantiate(item.prefab);
+                obj.transform.parent = furnitureParent.transform;
+                obj.transform.position = item.position;
+                obj.transform.rotation = Quaternion.AngleAxis(item.rotation, Vector3.up);
+                furnitureInstances.Add(obj);
+            }
+
+            PlayerManager.Instance.ReloadPlayerOptions();
+        }
+
+        if (GameManager.Instance.gameMode == GameMode.EditMode) {
+            // always ensure our locations and rotations are up to date.
+            for (int i = 0; i < furnitureInstances.Count; i++) {
+                Furniture item = furniture[i];
+                GameObject obj = furnitureInstances[i];
+
+                obj.transform.position = item.position;
+                obj.transform.rotation = Quaternion.AngleAxis(item.rotation, Vector3.up);
+            }
+        }
     }
 }
