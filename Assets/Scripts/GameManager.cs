@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum GameMode {
+    PlayMode,
+    EditMode
+}
+
 public class GameManager : Singleton<GameManager>
 {
     public bool GameOn { private set; get; }
@@ -9,6 +14,8 @@ public class GameManager : Singleton<GameManager>
     public int KillCount { private set; get; }
     [SerializeField]
     private int newPossessionThreshold = 2;
+
+    public GameMode gameMode = GameMode.PlayMode;
 
     public void StartGame()
     {

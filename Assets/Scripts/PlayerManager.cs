@@ -7,8 +7,10 @@ public class PlayerManager : Singleton<PlayerManager>
     private List<GameObject> playablePlayers = new List<GameObject>();
     private List<GameObject> futurePlayablePlayers = new List<GameObject>();
 
-    void Start()
+    public void ReloadPlayerOptions()
     {
+        playablePlayers.Clear();
+        futurePlayablePlayers.Clear();
         playablePlayers.AddRange(GameObject.FindGameObjectsWithTag("Player"));
         futurePlayablePlayers.AddRange(GameObject.FindGameObjectsWithTag("FuturePlayer"));
     }
