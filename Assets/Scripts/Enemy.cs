@@ -61,6 +61,7 @@ public class Enemy : MonoBehaviour, IGetHealthSystem
             --enemyHealth;
             if (enemyHealth < 1)
             {
+                SoundManager.Instance.PlaySoundEffect(SoundEffect.ZombieGroan);
                 Destroy(this.gameObject, 0.1f);
                 GameManager.Instance.AddToKillCount();
                 EnemyManager.Instance.enemies.Remove(this.gameObject);

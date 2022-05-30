@@ -116,6 +116,7 @@ public class Player : MonoBehaviour, IGetHealthSystem
     {
         playerHealth -= damageAmount;
         healthSystem.Damage(damageAmount);
+        SoundManager.Instance.PlaySoundEffect(SoundEffect.HitHurt);
         //UIManager.Instance.SetPlayerCurrentHealth(playerHealth);
         if (playerHealth < 1)
         {

@@ -33,13 +33,18 @@ public class PlayerManager : Singleton<PlayerManager>
         {
             futurePlayablePlayers.Remove(player);
         }
+        SoundManager.Instance.PlaySoundEffect(SoundEffect.Death);
         player.SetActive(false);
     }
 
     public void SelectNewPlayer()
     {
         //playablePlayers[0].GetComponent<Player>().enabled = true;
-        GameManager.Instance.playerChar = playablePlayers[0];
+        if(GameManager.Instance.playerChar != playablePlayers[0])
+        {
+            GameManager.Instance.playerChar = playablePlayers[0];
+            SoundManager.Instance.PlaySoundEffect(SoundEffect.NewPossession);
+        }        
     }
 
     // returns a bool indicating if there was anything available to possess.

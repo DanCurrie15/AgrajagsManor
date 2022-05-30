@@ -25,6 +25,7 @@ public class FollowingProjectile : MonoBehaviour {
     {
         if (!collision.gameObject.CompareTag("FuturePlayer"))
         {
+			SoundManager.Instance.PlaySoundEffect(SoundEffect.Shock);
 			this.gameObject.SetActive(false);
 			Destroy(this.gameObject, 0.1f);
 		}

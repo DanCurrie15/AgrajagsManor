@@ -23,8 +23,9 @@ public class ProjectileMover : MonoBehaviour {
 
 	private void OnCollisionEnter(Collision collision)
 	{
-		if (collision.gameObject.CompareTag("Enemy"))
+		if (!collision.gameObject.CompareTag("FuturePlayer"))
 		{
+			SoundManager.Instance.PlaySoundEffect(SoundEffect.BookThud);
 			this.gameObject.SetActive(false);
 			Destroy(this.gameObject, 0.1f);
 		}

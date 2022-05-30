@@ -26,6 +26,7 @@ public class GameManager : Singleton<GameManager>
     public void GameOver()
     {
         UIManager.Instance.ShowGameOverPanel();
+        MusicManager.Instance.PlayMusic();
         GameOn = false;
     }
 
