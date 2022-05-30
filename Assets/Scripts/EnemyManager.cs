@@ -26,7 +26,7 @@ public class EnemyManager : Singleton<EnemyManager>
 
     void Update()
     {
-        if (Time.time > nextSpawn && GameManager.Instance.GameOn)
+        if (Time.time > nextSpawn && GameManager.Instance.GameOn && GameManager.Instance.gameMode == GameMode.PlayMode)
         {
             nextSpawn = Time.time + spawnRate;
             Instantiate(enemy, spawnPoints[Random.Range(0,spawnPointRange)].position, Quaternion.identity);
