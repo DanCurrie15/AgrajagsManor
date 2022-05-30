@@ -17,7 +17,7 @@ public class Player : MonoBehaviour, IGetHealthSystem
     private float nextDamage = 0f;
     private Animator animator;
     private HealthSystem healthSystem;
-    private float projectileRate = 1f;
+    private float projectileRate = 0.5f;
     private float nextprojectile = 0;
 
     [SerializeField]

@@ -33,7 +33,7 @@ public class GameManager : Singleton<GameManager>
         KillCount++;
         if (KillCount > newPossessionThreshold) {
             PlayerManager.Instance.GainNewPossession();
-            newPossessionThreshold *= 2;
+            newPossessionThreshold += 4;
         }
         UIManager.Instance.UpdateKills();
     }
